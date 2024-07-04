@@ -16,7 +16,8 @@ const travelsignupSchima=new mongoose.Schema({
         type:String
     },
     adminAuthentication:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },  
 })
 

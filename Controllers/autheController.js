@@ -1,7 +1,6 @@
 
 const userSignupModel = require('../Models/singupmodel');
 const TravelsSignupModel = require('../Models/TravelsSignupModel');
-const travelsSignup = require("../Models/TravelsSignupModel")
 const bcrypt = require("bcrypt")
 const emailregex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordregex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -59,7 +58,7 @@ exports.travelsSignupPost= async (req,res)=>{
     try{
         const {name, place,email,number,password, confirmpassword}=req.body
 
-        const travelsEmail = await travelsSignup.findOne({email})
+        const travelsEmail = await TravelsSignupModel.findOne({email})
 
         if (travelsEmail){
             return res.status(400).json({message:"user alredy exist"})
@@ -85,7 +84,11 @@ exports.travelsSignupPost= async (req,res)=>{
 
 
         const data =new TravelsSignupModel({
-            travelsName:name,travelPlace:place,travelsNumber:number,password : hashedPassword, travelsEmail:email
+            travelsName:name,
+            travelPlace:place,
+            travelsNumber:number,
+            password : hashedPassword, 
+            travelsEmail:email
         })
         await data.save()
 
@@ -94,6 +97,37 @@ exports.travelsSignupPost= async (req,res)=>{
 
     }catch (error){
         console.log(Error)
+
+    }
+}
+
+exports.travelsLogin = async (req, res)=>{
+    try{
+        const {password,name}=req.body
+        const user = await TravelsSignupModel.findOne({travelsEmail:name});
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        const adminAuthentication = user.adminAuthentication      
+        console.log("user name and password mismatch");
+        console.log(user);
+        console.log(passwordMatch);
+
+        if (!user ){
+            console.log("user name and password mismatchhhhhhhhhhhhhhhhhhhhhh");
+
+            return res.status(400).json({message:"user name  mismatch"})
+        }else if(!passwordMatch){
+            console.log(passwordMatch);
+            return res.status(400).json({message:"password mismach"})
+        }
+        else if (!adminAuthentication){
+            console.log(" admin not approved");
+            return res.status(400).json({message : "not approved to the admin"})
+        }
+        res.status(200).json({message:"travels login sucsessfull"})
+        console.log("travels login sucsessfull")
+
+    }catch(error){
+        console.log(error);
 
     }
 }
