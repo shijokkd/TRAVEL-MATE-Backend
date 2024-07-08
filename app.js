@@ -11,9 +11,7 @@ app.use(cors());
 const commonRouter = require("./Routes/commonRouter");
 const travelsRouter = require("./Routes/travelsRouts")
 app.use("/api/", commonRouter);
-console.log("erroe in commen")
-// app.use("/api/", travelsRouter);
-console.log("erroe in commenkkkkkkkkkkk")
+app.use( '/api/',travelsRouter);
 
 
 

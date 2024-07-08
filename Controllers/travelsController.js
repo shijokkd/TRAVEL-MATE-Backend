@@ -1,4 +1,5 @@
-const packageaddmodel = require("../Models/packeageAddModels")
+const packageAddModel = require("../Models/packageAddingModel")
+const vehiclesAddModel = require("../Models/vehicleAddModels")
 exports.vehicleAddPost = async (req,res)=>{
     try{
         console.log(req.files)
@@ -16,7 +17,7 @@ exports.vehicleAddPost = async (req,res)=>{
         const imagepath = req.files.map(file=>file.path)
         console.log(imagepath)
 
-        const data = new packageaddmodel({
+        const data = new vehiclesAddModel({
             name,
             registerNumber:regnumber,
             place:city,
@@ -35,5 +36,31 @@ exports.vehicleAddPost = async (req,res)=>{
     }catch (error){
         console.log(error);
         return res.status(500).json({message:"server side error"})
+    }
+}
+
+exports.packageadd= (req,res)=>{
+    try{
+        console.log(req.body);
+        console.log(req.files);
+        const {name,startingplace,destination,expirationdate,totalmembers,activities}=req.body
+        const activities1= JSON.parse(activities)
+        console.log(activities1);
+        
+        if (!name){return res.status(200).json({message:"name is requier"})}
+        if (!startingplace){return res.status(200).json({message:"starting place is requier"})}
+        if (!destination){return res.status(200).json({message:"destination is requier"})}
+        if (!expirationdate){return res.status(200).json({message:"expiration date is requier"})}
+        if (!totalmembers){return res.status(200).json({message:"total members is requier"})}
+       
+        const data = new packageAddModel({
+            name,destination,expirationdate,totalmembers,startingplace,
+            activities:activities1.value
+        })
+        data.save()
+
+       
+    }catch (error){
+       console.log(error);
     }
 }
