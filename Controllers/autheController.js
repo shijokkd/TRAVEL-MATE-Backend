@@ -52,8 +52,38 @@ try{
         res.status(200).json({message:"registration successfull"})
     } catch (error){
         console.log(error);
+        return res.status(500).json({message:"server side error"})
     }
 }
+
+exports.userLogin = async (req,res)=>{
+    try{
+        const {username , password} = req.body
+
+        const user = await userSignupModel.findOne({email:username})
+        console.log(user,"kkkkkkk");
+
+        if (!username || !password ){
+            return res.status(400).json({message:"fill username and password "})
+        }
+        if(!user){
+            return res.status(400).json({message:"user not registerd"})
+        }else{
+            const passwordMatch= await bcrypt.compare(password, user.password);
+            if(!passwordMatch){
+                return res.status(400).json({message:"password not match"})
+            }else{
+                return res.status(200).json({message:"login sucessfull"})
+            }
+            
+        }
+    }catch(error){
+       console.log(error);
+       return res.status(500).json({message:"server side error"})
+    }
+
+}
+
 exports.travelsSignupPost= async (req,res)=>{
     try{
         const {name, place,email,number,password, confirmpassword}=req.body
@@ -88,7 +118,8 @@ exports.travelsSignupPost= async (req,res)=>{
             travelPlace:place,
             travelsNumber:number,
             password : hashedPassword, 
-            travelsEmail:email
+            travelsEmail:email,
+            
         })
         await data.save()
 
@@ -97,9 +128,12 @@ exports.travelsSignupPost= async (req,res)=>{
 
     }catch (error){
         console.log(Error)
+        return res.status(500).json({message:"server side error"})
 
     }
 }
+
+
 
 exports.travelsLogin = async (req, res)=>{
     try{
@@ -112,7 +146,7 @@ exports.travelsLogin = async (req, res)=>{
         console.log(passwordMatch);
 
         if (!user ){
-            console.log("user name and password mismatchhhhhhhhhhhhhhhhhhhhhh");
+            console.log("user name and password mismatch");
 
             return res.status(400).json({message:"user name  mismatch"})
         }else if(!passwordMatch){
@@ -126,9 +160,13 @@ exports.travelsLogin = async (req, res)=>{
         res.status(200).json({message:"travels login sucsessfull"})
         console.log("travels login sucsessfull")
 
+
     }catch(error){
         console.log(error);
+       return res.status(500).json({message:"server side error"})
 
     }
 }
+
+
 

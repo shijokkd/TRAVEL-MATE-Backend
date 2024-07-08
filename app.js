@@ -9,7 +9,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 const commonRouter = require("./Routes/commonRouter");
+const travelsRouter = require("./Routes/travelsRouts")
 app.use("/api/", commonRouter);
+console.log("erroe in commen")
+// app.use("/api/", travelsRouter);
+console.log("erroe in commenkkkkkkkkkkk")
+
+
+
 
 // mongodb connectede the run the server
 mongoose
